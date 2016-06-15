@@ -50,12 +50,12 @@ def tokenize(line):
         tokens.append(token) #appending eg {'type': 'MINUS'}
     return tokens
 
-def solveMult(tokens, index): 
-    solution = {'type': 'NUMBER', 'number': tokens[index-2]['number'] * tokens[index]['number']}
+def solveMult(tokens, newtokens, index): 
+    solution = {'type': 'NUMBER', 'number': newtokens[-2]['number'] * tokens[index]['number']}
     return solution, index + 1 
 
-def solveDiv(tokens, index): 
-    solution = {'type': 'NUMBER', 'number': tokens[index-2]['number'] / tokens[index]['number']}
+def solveDiv(tokens, newtokens, index): 
+    solution = {'type': 'NUMBER', 'number': newtokens[-2]['number'] / tokens[index]['number']}
     return solution, index + 1 
 
 def ignore(tokens, index): 
@@ -67,11 +67,12 @@ def firstsolve(tokens): #just solve multiplications and divisions, ignore the re
     index = 0
     while index <len(tokens): 
         if tokens[index-1]['type'] == "MUL": #eg if 8*2, index is in 2 
-            newtokens = newtokens[:-2] #remove 8* 
-            (solution, index) = solveMult(tokens, index) #append 8 
+            (solution, index) = solveMult(tokens, newtokens, index) #append 8 
+            newtokens = newtokens[:-2] #remove 8*
+
         elif tokens[index-1]['type'] == "DIV":
+            (solution, index) = solveDiv(tokens, newtokens, index)
             newtokens = newtokens[:-2]
-            (solution, index) = solveDiv(tokens, index)
         elif tokens[index-1]['type'] in "NUMBERPLUSMINUS":  
             (solution, index) = ignore(tokens, index)
         newtokens.append(solution)
@@ -92,19 +93,10 @@ def evaluate(newtokens): #final solve - solve the remaining additions and subtra
         index += 1
     return answer
 
-
 while True:
     print '> ',
     line = raw_input().replace(' ','') #remove spaces 
-    tokens = tokenize(line)
-    newtokens= firstsolve(tokens) 
-    print newtokens 
-    answer = evaluate(newtokens)
-    print "answer = %f\n" % answer
-
-
-
-
-
-
-
+    tokens = tokenize(line) #tokenize everything 
+    newtokens= firstsolve(tokens) #new tokens with mutl and div solved, only + and - remaining
+    answer = evaluate(newtokens) # solve plus and minuses 
+    print "answer = %f\n" % answer 
