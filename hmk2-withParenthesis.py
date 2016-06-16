@@ -62,7 +62,7 @@ def ignore(tokens, index):
     solution = tokens[index]
     return solution, index + 1 
 
-def firstsolve(tokens): #just solve multiplications and divisions, ignore the rest
+def evaluateMultiplyAndDivide(tokens): #just solve multiplications and divisions, ignore the rest
     newtokens = []
     index = 0
     while index <len(tokens): 
@@ -78,7 +78,7 @@ def firstsolve(tokens): #just solve multiplications and divisions, ignore the re
         newtokens.append(solution)
     return newtokens 
 
-def evaluate(newtokens): #final solve - solve the remaining additions and subtractions
+def evaluatePlusAndMinus(newtokens): #final solve - solve the remaining additions and subtractions
     answer = 0
     newtokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
     index = 1
@@ -96,7 +96,7 @@ def evaluate(newtokens): #final solve - solve the remaining additions and subtra
 
 #********************Part 2: Make it work with parentheses too ***********************
 
-def extract(alist): #finds mini equations inside parenthesis 
+def findParenthesis(alist): #finds mini equations inside parenthesis 
     minieq = []
     i = alist.index("(") #index of first right parenthesing found 
     close = alist.index(")") #index of first closing parenthesing found 
@@ -125,11 +125,11 @@ while True:
     print '> ',
     line = raw_input().replace(' ','') #remove spaces
     while "(" in line: 
-        alist, pos, minieq = extract(list(line)) #extract most inner equation 
-        answer = evaluate(firstsolve(tokenize(minieq))) #solve that inner equation
+        alist, pos, minieq = findParenthesis(list(line)) #find the most inner equation 
+        answer = evaluatePlusAndMinus(evaluateMultiplyAndDivide(tokenize(minieq))) #solve that inner equation
         line = insertSolution(alist,pos,answer) #insert solution, and check if there are still parenthesis 
     else: 
-        answer = evaluate(firstsolve(tokenize(''.join(line)))) 
+        answer = evaluatePlusAndMinus(evaluateMultiplyAndDivide(tokenize(''.join(line)))) 
         print "answer = %f\n" % answer
 
 

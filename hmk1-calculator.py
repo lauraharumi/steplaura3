@@ -64,7 +64,7 @@ def ignore(tokens, index):
     solution = tokens[index]
     return solution, index + 1 
 
-def firstsolve(tokens): #just solve multiplications and divisions, ignore the rest
+def evaluateMultiplyAndDivide(tokens): #just solve multiplications and divisions, ignore the rest
     newtokens = []
     index = 0
     while index <len(tokens): 
@@ -84,7 +84,7 @@ def firstsolve(tokens): #just solve multiplications and divisions, ignore the re
 #################### end of added work ############################
 
 
-def evaluate(newtokens): #final solve - solve the remaining additions and subtractions
+def evaluatePlusAndMinus(newtokens): #final solve - solve the remaining additions and subtractions
     answer = 0
     newtokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
     index = 1
@@ -101,8 +101,8 @@ while True:
     print '> ',
     line = raw_input().replace(' ','') #remove spaces 
     tokens = tokenize(line) #tokenize everything 
-    newtokens= firstsolve(tokens) #new tokens with mutl and div solved, only + and - remaining
+    newtokens= evaluateMultiplyAndDivide(tokens) #new tokens with mutl and div solved, only + and - remaining
     print "tokens: " + ''.join(str([pairs.values()[len(pairs)-1] for pairs in tokens])) #printing just the values
     print "simplified tokens: " + ''.join(str([pairs.values()[len(pairs)-1] for pairs in newtokens]))
-    answer = evaluate(newtokens) # solve plus and minuses 
+    answer = evaluatePlusAndMinus(newtokens) # solve plus and minuses 
     print "answer = %f\n" % answer 
